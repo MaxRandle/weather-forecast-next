@@ -1,0 +1,573 @@
+openapi: 3.0.0
+info:
+  title: OpenWeather One Call API 3.0
+  description: Access current weather, minute forecast for 1 hour, hourly forecast for 48 hours, daily forecast for 8 days and government weather alerts
+  version: "3.0"
+servers:
+  - url: https://api.openweathermap.org/data/3.0
+    description: OpenWeather API v3.0 server
+
+paths:
+  /onecall:
+    get:
+      operationId: getWeather
+      summary: Get current weather, minute/hourly/daily forecasts and alerts
+      parameters:
+        - name: lat
+          in: query
+          required: true
+          schema:
+            type: number
+            minimum: -90
+            maximum: 90
+          description: Latitude coordinate
+        - name: lon
+          in: query
+          required: true
+          schema:
+            type: number
+            minimum: -180
+            maximum: 180
+          description: Longitude coordinate
+        - name: appid
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Your unique API key
+        - name: exclude
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Comma-separated list of data blocks to exclude (current,minutely,hourly,daily,alerts)
+        - name: units
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [standard, metric, imperial]
+            default: standard
+          description: Units of measurement
+        - name: lang
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Language code for translations
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OneCallResponse"
+        "400":
+          $ref: "#/components/responses/Error400"
+        "401":
+          $ref: "#/components/responses/Error401"
+
+  /onecall/timemachine:
+    get:
+      operationId: getWeatherHistorical
+      summary: Get historical weather data for a specific timestamp
+      parameters:
+        - name: lat
+          in: query
+          required: true
+          schema:
+            type: number
+            minimum: -90
+            maximum: 90
+          description: Latitude coordinate
+        - name: lon
+          in: query
+          required: true
+          schema:
+            type: number
+            minimum: -180
+            maximum: 180
+          description: Longitude coordinate
+        - name: dt
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: Timestamp (Unix time, UTC time zone)
+        - name: appid
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Your unique API key
+        - name: units
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [standard, metric, imperial]
+            default: standard
+        - name: lang
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TimeMachineResponse"
+        "400":
+          $ref: "#/components/responses/Error400"
+        "401":
+          $ref: "#/components/responses/Error401"
+
+  /onecall/day_summary:
+    get:
+      operationId: getWeatherDaySummary
+      summary: Get daily aggregated weather data
+      parameters:
+        - name: lat
+          in: query
+          required: true
+          schema:
+            type: number
+            minimum: -90
+            maximum: 90
+          description: Latitude coordinate
+        - name: lon
+          in: query
+          required: true
+          schema:
+            type: number
+            minimum: -180
+            maximum: 180
+          description: Longitude coordinate
+        - name: date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Date in YYYY-MM-DD format
+        - name: appid
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Your unique API key
+        - name: units
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [standard, metric, imperial]
+            default: standard
+        - name: tz
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Timezone in ±XX:XX format
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DaySummaryResponse"
+        "400":
+          $ref: "#/components/responses/Error400"
+        "401":
+          $ref: "#/components/responses/Error401"
+
+components:
+  schemas:
+    OneCallResponse:
+      type: object
+      properties:
+        lat:
+          type: number
+        lon:
+          type: number
+        timezone:
+          type: string
+        timezone_offset:
+          type: integer
+        current:
+          $ref: "#/components/schemas/CurrentWeather"
+        minutely:
+          type: array
+          items:
+            $ref: "#/components/schemas/MinutelyForecast"
+        hourly:
+          type: array
+          items:
+            $ref: "#/components/schemas/HourlyForecast"
+        daily:
+          type: array
+          items:
+            $ref: "#/components/schemas/DailyForecast"
+        alerts:
+          type: array
+          items:
+            $ref: "#/components/schemas/Alert"
+
+    CurrentWeather:
+      type: object
+      properties:
+        dt:
+          type: integer
+          description: Current time, Unix, UTC
+        sunrise:
+          type: integer
+          description: Sunrise time, Unix, UTC
+        sunset:
+          type: integer
+          description: Sunset time, Unix, UTC
+        temp:
+          type: number
+          description: Temperature
+        feels_like:
+          type: number
+          description: Feels like temperature
+        pressure:
+          type: integer
+          description: Atmospheric pressure on sea level, hPa
+        humidity:
+          type: integer
+          description: Humidity, %
+        dew_point:
+          type: number
+        uvi:
+          type: number
+          description: UV index
+        clouds:
+          type: integer
+          description: Cloudiness, %
+        visibility:
+          type: integer
+          description: Average visibility, metres
+        wind_speed:
+          type: number
+        wind_deg:
+          type: integer
+          description: Wind direction, degrees
+        wind_gust:
+          type: number
+          description: Wind gust speed
+        weather:
+          type: array
+          items:
+            $ref: "#/components/schemas/Weather"
+        rain:
+          $ref: "#/components/schemas/Precipitation"
+        snow:
+          $ref: "#/components/schemas/Precipitation"
+
+    MinutelyForecast:
+      type: object
+      properties:
+        dt:
+          type: integer
+          description: Time of forecast, Unix, UTC
+        precipitation:
+          type: number
+          description: Precipitation volume, mm/h
+
+    HourlyForecast:
+      type: object
+      properties:
+        dt:
+          type: integer
+        temp:
+          type: number
+        feels_like:
+          type: number
+        pressure:
+          type: integer
+        humidity:
+          type: integer
+        dew_point:
+          type: number
+        uvi:
+          type: number
+        clouds:
+          type: integer
+        visibility:
+          type: integer
+        wind_speed:
+          type: number
+        wind_deg:
+          type: integer
+        wind_gust:
+          type: number
+        weather:
+          type: array
+          items:
+            $ref: "#/components/schemas/Weather"
+        pop:
+          type: number
+          description: Probability of precipitation
+        rain:
+          $ref: "#/components/schemas/Precipitation"
+        snow:
+          $ref: "#/components/schemas/Precipitation"
+
+    DailyForecast:
+      type: object
+      properties:
+        dt:
+          type: integer
+        sunrise:
+          type: integer
+        sunset:
+          type: integer
+        moonrise:
+          type: integer
+        moonset:
+          type: integer
+        moon_phase:
+          type: number
+        summary:
+          type: string
+        temp:
+          $ref: "#/components/schemas/DailyTemp"
+        feels_like:
+          $ref: "#/components/schemas/DailyFeelsLike"
+        pressure:
+          type: integer
+        humidity:
+          type: integer
+        dew_point:
+          type: number
+        wind_speed:
+          type: number
+        wind_deg:
+          type: integer
+        wind_gust:
+          type: number
+        weather:
+          type: array
+          items:
+            $ref: "#/components/schemas/Weather"
+        clouds:
+          type: integer
+        pop:
+          type: number
+        rain:
+          type: number
+        snow:
+          type: number
+        uvi:
+          type: number
+
+    TimeMachineResponse:
+      type: object
+      properties:
+        lat:
+          type: number
+        lon:
+          type: number
+        timezone:
+          type: string
+        timezone_offset:
+          type: integer
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/HistoricalWeather"
+
+    DaySummaryResponse:
+      type: object
+      properties:
+        lat:
+          type: number
+        lon:
+          type: number
+        tz:
+          type: string
+        date:
+          type: string
+        units:
+          type: string
+        cloud_cover:
+          type: object
+          properties:
+            afternoon:
+              type: integer
+        humidity:
+          type: object
+          properties:
+            afternoon:
+              type: integer
+        precipitation:
+          type: object
+          properties:
+            total:
+              type: number
+        temperature:
+          type: object
+          properties:
+            min:
+              type: number
+            max:
+              type: number
+            afternoon:
+              type: number
+            night:
+              type: number
+            evening:
+              type: number
+            morning:
+              type: number
+        pressure:
+          type: object
+          properties:
+            afternoon:
+              type: integer
+        wind:
+          type: object
+          properties:
+            max:
+              type: object
+              properties:
+                speed:
+                  type: number
+                direction:
+                  type: integer
+
+    Weather:
+      type: object
+      properties:
+        id:
+          type: integer
+        main:
+          type: string
+        description:
+          type: string
+        icon:
+          type: string
+
+    Precipitation:
+      type: object
+      properties:
+        "1h":
+          type: number
+
+    DailyTemp:
+      type: object
+      properties:
+        day:
+          type: number
+        min:
+          type: number
+        max:
+          type: number
+        night:
+          type: number
+        eve:
+          type: number
+        morn:
+          type: number
+
+    DailyFeelsLike:
+      type: object
+      properties:
+        day:
+          type: number
+        night:
+          type: number
+        eve:
+          type: number
+        morn:
+          type: number
+
+    Alert:
+      type: object
+      properties:
+        sender_name:
+          type: string
+        event:
+          type: string
+        start:
+          type: integer
+        end:
+          type: integer
+        description:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+
+    HistoricalWeather:
+      type: object
+      properties:
+        dt:
+          type: integer
+        sunrise:
+          type: integer
+        sunset:
+          type: integer
+        temp:
+          type: number
+        feels_like:
+          type: number
+        pressure:
+          type: integer
+        humidity:
+          type: integer
+        dew_point:
+          type: number
+        uvi:
+          type: number
+        clouds:
+          type: integer
+        visibility:
+          type: integer
+        wind_speed:
+          type: number
+        wind_deg:
+          type: integer
+        weather:
+          type: array
+          items:
+            $ref: "#/components/schemas/Weather"
+        rain:
+          $ref: "#/components/schemas/Precipitation"
+        snow:
+          $ref: "#/components/schemas/Precipitation"
+
+  responses:
+    Error400:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              cod:
+                type: integer
+                example: 400
+              message:
+                type: string
+              parameters:
+                type: array
+                items:
+                  type: string
+
+    Error401:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              cod:
+                type: integer
+                example: 401
+              message:
+                type: string
