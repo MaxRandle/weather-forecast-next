@@ -1,6 +1,6 @@
 import { OpenweatherContext } from "./openweatherContext";
 
-const baseUrl = "https://api.openweathermap.org/data/3.0";
+const baseUrl = "api/openweather";
 
 export type ErrorWrapper<TError> =
   | TError

@@ -4,7 +4,7 @@ info:
   description: Access current weather, minute forecast for 1 hour, hourly forecast for 48 hours, daily forecast for 8 days and government weather alerts
   version: "3.0"
 servers:
-  - url: https://api.openweathermap.org/data/3.0
+  - url: api/openweather
     description: OpenWeather API v3.0 server
 
 paths:

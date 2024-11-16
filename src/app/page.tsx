@@ -1,6 +1,21 @@
+"use client";
+
 import Image from "next/image";
+import { useGetWeather } from "@/generated/openweatherApi/openweatherComponents";
 
 export default function Home() {
+  if (!process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY) {
+    throw new Error("NEXT_PUBLIC_OPENWEATHER_API_KEY is required");
+  }
+
+  const { data, error, isError, isLoading, isFetched } = useGetWeather({
+    queryParams: {
+      appid: process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY,
+      lat: -37.0,
+      lon: 175.0,
+    },
+  });
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
@@ -49,6 +64,13 @@ export default function Home() {
           </a>
         </div>
       </main>
+
+      <pre>
+        <code>{isLoading ? "Loading..." : null}</code>
+        <code>{isError ? error.toString() : null}</code>
+        <code>{isFetched ? JSON.stringify(data, null, 2) : null}</code>
+      </pre>
+
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"

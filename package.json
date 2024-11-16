@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "codegen": "npx openapi-codegen gen openweather"
+    "codegen": "rm -rf src/generated && npx openapi-codegen gen openweather"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.60.5",
