@@ -1,18 +1,33 @@
 import type { Config } from "tailwindcss";
+import twAnimate from "tailwindcss-animate";
 
 export default {
+  darkMode: ["class"],
   content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
-      colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+      container: {
+        center: true,
+        padding: {
+          DEFAULT: "1.5rem",
+          lg: "2.5rem",
+        },
+        screens: {
+          sm: "100%",
+          md: "48rem",
+          lg: "64rem",
+        },
       },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
+      colors: {},
     },
   },
-  plugins: [],
+  plugins: [twAnimate],
 } satisfies Config;
