@@ -17,9 +17,9 @@ export default {
           lg: "2.5rem",
         },
         screens: {
-          sm: "100%",
-          md: "48rem",
-          lg: "64rem",
+          sm: "25rem",
+          // md: "48rem",
+          // lg: "64rem",
         },
       },
       borderRadius: {

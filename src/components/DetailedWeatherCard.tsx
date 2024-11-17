@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heading } from "@/components/ui/Heading";
 import { Typography } from "@/components/ui/Typography";
 import {
@@ -24,10 +18,12 @@ import {
 import { TbUvIndex } from "react-icons/tb";
 import { DailyForecast } from "@/generated/openweatherApi/openweatherSchemas";
 
-export function TodayWeatherCard({
-  todayWeather,
+export function DetailedWeatherCard({
+  dailyForecast,
+  dayName,
 }: {
-  todayWeather: DailyForecast;
+  dailyForecast: DailyForecast;
+  dayName: string;
 }) {
   if (!process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY) {
     throw new Error("NEXT_PUBLIC_OPENWEATHER_API_KEY is required");
@@ -44,7 +40,7 @@ export function TodayWeatherCard({
       "11d": WiThunderstorm,
       "13d": WiSnow,
       "50d": WiFog,
-    }[todayWeather.weather?.[0].icon ?? ""] ?? WiDaySunny;
+    }[dailyForecast.weather?.[0].icon ?? ""] ?? WiDaySunny;
 
   const calcUvIndex = (uvi: number) => {
     if (uvi < 3) {
@@ -63,28 +59,28 @@ export function TodayWeatherCard({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>
-          <Typography>Auckland</Typography>
+        <CardTitle className="flex items-center gap-2">
           <Heading level="h2" palette={"primary"}>
-            Today
+            {dayName}
           </Heading>
+          <Typography>•</Typography>
+          <Typography>Auckland</Typography>
         </CardTitle>
-        <CardDescription>
-          <div className="flex gap-4">
-            <Heading level={"h1"} palette={"primary"}>
-              {Math.round(todayWeather?.temp?.day ?? 0)}°
-            </Heading>
-            <div>
-              <Typography palette={"weaker"}>
-                {Math.round(todayWeather?.temp?.max ?? 0)}° ▲
-              </Typography>
-              <Typography palette={"weaker"}>
-                {Math.round(todayWeather?.temp?.min ?? 0)}° ▼
-              </Typography>
-            </div>
-          </div>
-        </CardDescription>
       </CardHeader>
+
+      <CardContent className="flex gap-4">
+        <Heading level={"h1"} palette={"primary"}>
+          {Math.round(dailyForecast?.temp?.day ?? 0)}°
+        </Heading>
+        <div>
+          <Typography palette={"weaker"}>
+            {Math.round(dailyForecast?.temp?.max ?? 0)}° ▲
+          </Typography>
+          <Typography palette={"weaker"}>
+            {Math.round(dailyForecast?.temp?.min ?? 0)}° ▼
+          </Typography>
+        </div>
+      </CardContent>
 
       <CardContent>
         <div className="flex items-center gap-4">
@@ -93,12 +89,12 @@ export function TodayWeatherCard({
             <div className="flex items-center gap-2">
               <WiStrongWind size={32} className="text-base-700" />
               <Typography>
-                {Math.round(todayWeather.wind_speed ?? 0)} km/h
+                {Math.round(dailyForecast.wind_speed ?? 0)} km/h
               </Typography>
             </div>
             <div className="flex items-center gap-2">
               <TbUvIndex size={32} className="text-base-700" />
-              <Typography>{calcUvIndex(todayWeather.uvi ?? 0)}</Typography>
+              <Typography>{calcUvIndex(dailyForecast.uvi ?? 0)}</Typography>
             </div>
           </div>
         </div>
