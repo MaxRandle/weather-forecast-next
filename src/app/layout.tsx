@@ -12,7 +12,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <QueryClientProvider client={queryClient}>
-        <body>{children}</body>
+        <body className="bg-base-100 text-base-900 dark:bg-base-900 dark:text-base-100">
+          {children}
+        </body>
       </QueryClientProvider>
     </html>
   );

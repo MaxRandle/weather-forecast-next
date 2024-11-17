@@ -44,6 +44,9 @@ export type CurrentWeather = {
    * Humidity, %
    */
   humidity?: number;
+  /**
+   * Atmospheric temperature (varying according to pressure and humidity) below which water droplets begin to condense and dew can form. Units - default: kelvin, metric: Celsius, imperial: Fahrenheit
+   */
   dew_point?: number;
   /**
    * UV index

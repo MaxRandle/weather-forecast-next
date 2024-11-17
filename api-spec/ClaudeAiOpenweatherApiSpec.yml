@@ -221,51 +221,68 @@ components:
         dt:
           type: integer
           description: Current time, Unix, UTC
+          required: true
         sunrise:
           type: integer
           description: Sunrise time, Unix, UTC
+          required: true
         sunset:
           type: integer
           description: Sunset time, Unix, UTC
+          required: true
         temp:
           type: number
           description: Temperature
+          required: true
         feels_like:
           type: number
           description: Feels like temperature
+          required: true
         pressure:
           type: integer
           description: Atmospheric pressure on sea level, hPa
+          required: true
         humidity:
           type: integer
           description: Humidity, %
+          required: true
         dew_point:
+          description: "Atmospheric temperature (varying according to pressure and humidity) below which water droplets begin to condense and dew can form. Units - default: kelvin, metric: Celsius, imperial: Fahrenheit"
           type: number
+          required: true
         uvi:
           type: number
           description: UV index
+          required: true
         clouds:
           type: integer
           description: Cloudiness, %
+          required: true
         visibility:
           type: integer
           description: Average visibility, metres
+          required: true
         wind_speed:
           type: number
         wind_deg:
           type: integer
           description: Wind direction, degrees
+          required: true
         wind_gust:
           type: number
           description: Wind gust speed
+          required: true
         weather:
           type: array
           items:
             $ref: "#/components/schemas/Weather"
+          required: true
         rain:
           $ref: "#/components/schemas/Precipitation"
+          required: true
         snow:
           $ref: "#/components/schemas/Precipitation"
+          required: true
 
     MinutelyForecast:
       type: object
@@ -273,9 +290,11 @@ components:
         dt:
           type: integer
           description: Time of forecast, Unix, UTC
+          required: true
         precipitation:
           type: number
           description: Precipitation volume, mm/h
+          required: true
 
     HourlyForecast:
       type: object
@@ -321,48 +340,69 @@ components:
       properties:
         dt:
           type: integer
+          required: true
         sunrise:
           type: integer
+          required: true
         sunset:
           type: integer
+          required: true
         moonrise:
           type: integer
+          required: true
         moonset:
           type: integer
+          required: true
         moon_phase:
           type: number
+          required: true
         summary:
           type: string
+          required: true
         temp:
           $ref: "#/components/schemas/DailyTemp"
+          required: true
         feels_like:
           $ref: "#/components/schemas/DailyFeelsLike"
+          required: true
         pressure:
           type: integer
+          required: true
         humidity:
           type: integer
+          required: true
         dew_point:
           type: number
+          required: true
         wind_speed:
           type: number
+          required: true
         wind_deg:
           type: integer
+          required: true
         wind_gust:
           type: number
+          required: true
         weather:
           type: array
           items:
             $ref: "#/components/schemas/Weather"
+          required: true
         clouds:
           type: integer
+          required: true
         pop:
           type: number
+          required: true
         rain:
           type: number
+          required: true
         snow:
           type: number
+          required: true
         uvi:
           type: number
+          required: true
 
     TimeMachineResponse:
       type: object
@@ -444,12 +484,16 @@ components:
       properties:
         id:
           type: integer
+          required: true
         main:
           type: string
+          required: true
         description:
           type: string
+          required: true
         icon:
           type: string
+          required: true
 
     Precipitation:
       type: object
@@ -462,28 +506,38 @@ components:
       properties:
         day:
           type: number
+          required: true
         min:
           type: number
+          required: true
         max:
           type: number
+          required: true
         night:
           type: number
+          required: true
         eve:
           type: number
+          required: true
         morn:
           type: number
+          required: true
 
     DailyFeelsLike:
       type: object
       properties:
         day:
           type: number
+          required: true
         night:
           type: number
+          required: true
         eve:
           type: number
+          required: true
         morn:
           type: number
+          required: true
 
     Alert:
       type: object
